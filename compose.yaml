@@ -2,7 +2,7 @@ services:
   ts-rsync:
     image: tailscale/tailscale:stable
     container_name: ts-rsync
-    hostname: tailscale-backup-raspberry
+    hostname: blueberry-ts-backup
     env_file: "./secrets/blueberry.env"
     environment:
       - TS_STATE_DIR=/var/lib/tailscale
@@ -48,20 +48,28 @@ services:
       retries: 5
       start_period: 5s
       start_interval: 5s
-
-  ssht-dozzle:
-    image: jnovack/autossh:2.1.0
-    container_name: ssht-dozzle
-    env_file: "./secrets/blueberry.env"
-    restart: unless-stopped
-    environment:
-      - SSH_OPTIONS=-o UserKnownHostsFile=/dev/null
-    volumes:
-      - "./secrets/ssh_key:/id_rsa:ro"
+    network_mode: service:ts-dozzle
     depends_on:
-      dozzle:
-        condition: service_healthy
+      -  ts-dozzle
+
+  ts-dozzle:
+    image: tailscale/tailscale:stable
+    container_name: ts-dozzle
+    hostname: blueberry-ts-dozzle
+    env_file: "./secrets/blueberry.env"
+    environment:
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+    volumes:
+      - ts-dozzle-state:/var/lib/tailscale
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - net_admin
+    restart: unless-stopped
 
 volumes:
   ts-rsync-state:
-    name: ts-rsync-state
+    name: "blueberry-ts-rsync-state"
+  ts-dozzle-state:
+    name: "blueberry-ts-dozzle-state"
