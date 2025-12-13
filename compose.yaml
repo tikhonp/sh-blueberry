@@ -22,7 +22,9 @@ services:
       dockerfile: Dockerfile
     container_name: rsync-server
     command: server
-    env_file: "./secrets/blueberry.env"
+    env_file: "./secrets/ssh-auth-key.env"
+    environment:
+      -  SSH_AUTH_KEY_1=${PUBLIC_KEY}
     volumes:
       - "/mnt/backup/:/data/"
     network_mode: service:ts-rsync
@@ -54,7 +56,7 @@ services:
     image: tailscale/tailscale:stable
     container_name: ts-dozzle
     hostname: blueberry-ts-dozzle
-    env_file: "./secrets/blueberry.env"
+    env_file: "./secrets/tailscale.env"
     environment:
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_USERSPACE=false
