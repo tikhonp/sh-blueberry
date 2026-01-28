@@ -75,9 +75,8 @@ services:
       - SYS_ADMIN
     volumes:
       - "/run/udev:/run/udev:ro"
+      - "./collector-config.yaml/:/opt/scrutiny/config/collector.yaml:ro"
     env_file: "./secrets/scrutiny.env"
-    environment:
-      COLLECTOR_HOST_ID: 'blueberry'
     devices:
       - "/dev/sda"
       - "/dev/bus/usb"

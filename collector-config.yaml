@@ -1,0 +1,8 @@
+version: 1
+
+host:
+  id: "blueberry"
+
+devices:
+  - device: /dev/sda
+    type: 'sat'
