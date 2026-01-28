@@ -66,6 +66,22 @@ services:
       - net_admin
     restart: unless-stopped
 
+  scrutiny-collector:
+    image: ghcr.io/analogj/scrutiny:master-collector
+    container_name: scrutiny-collector
+    restart: unless-stopped
+    cap_add:
+      - SYS_RAWIO
+      - SYS_ADMIN
+    volumes:
+      - "/run/udev:/run/udev:ro"
+    env_file: "./secrets/scrutiny.env"
+    environment:
+      COLLECTOR_HOST_ID: 'blueberry'
+    devices:
+      - "/dev/sda"
+      - "/dev/bus/usb"
+
 volumes:
   ts-rsync-state:
     name: "blueberry-ts-rsync-state"
