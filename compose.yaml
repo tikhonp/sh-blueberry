@@ -3,7 +3,9 @@ services:
     image: tailscale/tailscale:stable
     container_name: ts-rsync
     hostname: blueberry-ts-backup
-    env_file: "./secrets/tailscale.env"
+    env_file: 
+      - "./secrets/tailscale.env"
+      - "./secrets/proxy.env"
     environment:
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_USERSPACE=false
@@ -56,7 +58,9 @@ services:
     image: tailscale/tailscale:stable
     container_name: ts-dozzle
     hostname: blueberry-ts-dozzle
-    env_file: "./secrets/tailscale.env"
+    env_file: 
+      - "./secrets/tailscale.env"
+      - "./secrets/proxy.env"
     environment:
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_USERSPACE=false
@@ -86,7 +90,9 @@ services:
   watchtower:
     container_name: watchtower
     image: nickfedor/watchtower:1
-    env_file: ./secrets/watchtower.env
+    env_file: 
+      - "./secrets/watchtower.env" 
+      - "./secrets/proxy.env"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     command: --cleanup --remove-volumes --schedule "0 0 4 * * *"
